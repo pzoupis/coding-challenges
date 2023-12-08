@@ -13,27 +13,28 @@ import org.apache.logging.log4j.Logger;
 
 import me.zoupis.common.InputHandler;
 
+/**
+ * Advent of code 2023 <a href="https://adventofcode.com/2023/day/8">Day 8</a>
+ */
 public class Day08 {
   private static final Logger LOGGER = LogManager.getLogger(Day08.class);
   private static final InputHandler INPUT_HANDLER = InputHandler.getInstance();
 
   public static void main(String[] args) {
-    LOGGER.info(part1());
-    LOGGER.info(part2());
-  }
-
-  private static long part1() {
     List<String> input = INPUT_HANDLER.readInputFile("adventofcode/year2023/day08.input");
 
+    LOGGER.info(part1(input));
+    LOGGER.info(part2(input));
+  }
+
+  private static long part1(List<String> input) {
     String instructions = input.get(0);
     Map<String, List<String>> map = generateMap(input);
 
     return navigate(map, instructions, "AAA","ZZZ");
   }
 
-  private static long part2() {
-    List<String> input = INPUT_HANDLER.readInputFile("adventofcode/year2023/day08.input");
-
+  private static long part2(List<String> input) {
     String instructions = input.get(0);
     Map<String, List<String>> map = generateMap(input);
 

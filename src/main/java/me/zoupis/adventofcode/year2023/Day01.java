@@ -18,13 +18,13 @@ public class Day01 {
   private static final InputHandler INPUT_HANDLER = InputHandler.getInstance();
 
   public static void main(String[] args) {
-    part1();
-    part2();
-  }
-
-  public static void part1() {
     List<String> input = INPUT_HANDLER.readInputFile("adventofcode/year2023/day01.input");
 
+    LOGGER.info(part1(input));
+    LOGGER.info(part2(input));
+  }
+
+  public static int part1(List<String> input) {
     int sum = 0;
 
     for (String line : input) {
@@ -37,12 +37,10 @@ public class Day01 {
       sum += calibrationValue;
     }
 
-    LOGGER.info("The sum of all calibration values is: {}", sum);
+    return sum;
   }
 
-  public static void part2() {
-    List<String> input = INPUT_HANDLER.readInputFile("adventofcode/year2023/day01.input");
-
+  public static int part2(List<String> input) {
     int sum = 0;
 
     for (String line : input) {
@@ -55,7 +53,7 @@ public class Day01 {
       sum += calibrationValue;
     }
 
-    LOGGER.info("The sum of all calibration values is: {}", sum);
+    return sum;
   }
 
   public static List<Integer> getDigits(String line) {
