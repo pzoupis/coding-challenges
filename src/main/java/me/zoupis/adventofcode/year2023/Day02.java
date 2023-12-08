@@ -25,6 +25,7 @@ public class Day02 {
     List<String> input = INPUT_HANDLER.readInputFile("adventofcode/year2023/day02.input");
 
     LOGGER.info(part1(input));
+    LOGGER.info(part2(input));
   }
 
   private static int part1(List<String> input) {
@@ -35,24 +36,40 @@ public class Day02 {
     return sumOfIds;
   }
 
+  private static int part2(List<String> input) {
+    int sumOfPowers = 0;
+    for (String line : input) {
+      sumOfPowers += getGamePower(line);
+    }
+    return sumOfPowers;
+  }
+
+  public static int getGamePower(String line) {
+    List<String> sets = getSets(line);
+
+    int minimumRedNeeded = 0;
+    int minimumGreenNeeded = 0;
+    int minimumBlueNeeded = 0;
+
+    for (String set : sets) {
+      Cubes cubes = getCubes(set);
+      if (cubes.red() > minimumRedNeeded) minimumRedNeeded = cubes.red();
+      if (cubes.green() > minimumGreenNeeded) minimumGreenNeeded = cubes.green();
+      if (cubes.blue() > minimumBlueNeeded) minimumBlueNeeded = cubes.blue();
+    }
+
+    return calculateGamePower(new Cubes(minimumRedNeeded, minimumGreenNeeded, minimumBlueNeeded));
+  }
+
   public static int getValidGameId(String line) {
     List<String> sets = getSets(line);
     boolean gameIsValid = true;
 
     for (String set : sets) {
-      int red = 0;
-      int green = 0;
-      int blue = 0;
-      List<String> cubes = getCubes(set);
-      for (String cube : cubes) {
-        var amountAndColor = cube.split(" ");
-        if (amountAndColor[1].equals("red")) red += Integer.parseInt(amountAndColor[0]);
-        else if (amountAndColor[1].equals("green")) green += Integer.parseInt(amountAndColor[0]);
-        else blue += Integer.parseInt(amountAndColor[0]);
-      }
-
-      if (!isValidSet(red, green, blue)) {
+      Cubes cubes = getCubes(set);
+      if (!isValidSet(cubes)) {
         gameIsValid = false;
+        break;
       }
     }
 
@@ -61,6 +78,22 @@ public class Day02 {
     }
     return 0;
   }
+
+  private static Cubes getCubes(String set) {
+    int red = 0;
+    int green = 0;
+    int blue = 0;
+    List<String> cubes = splitCubes(set);
+    for (String cube : cubes) {
+      String[] amountAndColor = cube.split(" ");
+      if (amountAndColor[1].equals("red")) red += Integer.parseInt(amountAndColor[0]);
+      else if (amountAndColor[1].equals("green")) green += Integer.parseInt(amountAndColor[0]);
+      else blue += Integer.parseInt(amountAndColor[0]);
+    }
+    return new Cubes(red, green, blue);
+  }
+
+  public record Cubes(int red, int green, int blue) {}
 
   public static int getGameId(String line) {
     Matcher matcher = Pattern
@@ -79,15 +112,24 @@ public class Day02 {
     return List.of(sets);
   }
 
-  public static List<String> getCubes(String set) {
+  public static List<String> splitCubes(String set) {
     String[] cubes = set.split(",");
     Arrays.parallelSetAll(cubes, i -> cubes[i].trim());
     return List.of(cubes);
   }
 
-  public static boolean isValidSet(int red, int green, int blue) {
-    return red <= MAX_RED_CUBES &&
-           green <= MAX_GREEN_CUBES &&
-           blue <= MAX_BLUE_CUBES;
+  public static boolean isValidSet(Cubes cubes) {
+    return cubes.red() <= MAX_RED_CUBES &&
+           cubes.green() <= MAX_GREEN_CUBES &&
+           cubes.blue() <= MAX_BLUE_CUBES;
+  }
+
+  public static int calculateGamePower(Cubes cubes) {
+    int power = 1;
+    if (cubes.red() != 0) power *= cubes.red();
+    if (cubes.green() != 0) power *= cubes.green();
+    if (cubes.blue() != 0) power *= cubes.blue();
+
+    return power;
   }
 }

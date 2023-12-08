@@ -37,7 +37,7 @@ class Day02Test {
       "4 blue",
       "14 red"
     );
-    List<String> actual = Day02.getCubes(set);
+    List<String> actual = Day02.splitCubes(set);
     Assertions.assertLinesMatch(expected, actual);
   }
 }
