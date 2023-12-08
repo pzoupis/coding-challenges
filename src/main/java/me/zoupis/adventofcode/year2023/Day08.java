@@ -1,5 +1,6 @@
 package me.zoupis.adventofcode.year2023;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,37 +18,62 @@ public class Day08 {
 
   public static void main(String[] args) {
     LOGGER.info(part1());
+    LOGGER.info(part2());
   }
 
-  private static int part1() {
+  private static long part2() {
     List<String> input = INPUT_HANDLER.readInputFile("adventofcode/year2023/day08.input");
 
     String instructions = input.get(0);
     Map<String, List<String>> map = generateMap(input);
 
-    return navigate(map, instructions);
+    List<String> startingLocations = map.keySet().stream().filter(s -> s.charAt(2) == 'A').toList();
+
+    List<Long> steps = new ArrayList<>();
+
+    for (String startingLocation : startingLocations) {
+      steps.add(navigate(map, instructions, startingLocation, null));
+    }
+
+    Long[] longs = new Long[steps.size()];
+    return calculateLCM(steps.toArray(longs));
   }
 
-  private static int navigate(Map<String, List<String>> map, String instructions) {
-    String currentLocation = "AAA";
-    String finalDestination = "ZZZ";
+  private static long part1() {
+    List<String> input = INPUT_HANDLER.readInputFile("adventofcode/year2023/day08.input");
+
+    String instructions = input.get(0);
+    Map<String, List<String>> map = generateMap(input);
+
+    return navigate(map, instructions, "AAA","ZZZ");
+  }
+
+  private static long navigate(Map<String, List<String>> map, String instructions, String currentLocation, String finalDestination) {
     int steps = 0;
-    while (!currentLocation.equals(finalDestination)) {
+    while (!isFinalDestination(currentLocation, finalDestination)) {
       for (String instruction : instructions.split("")) {
-        var options = map.get(currentLocation);
+        List<String> options = map.get(currentLocation);
         if (instruction.equals("L")) {
           currentLocation = options.get(0);
         } else if (instruction.equals("R")) {
           currentLocation = options.get(1);
         }
         steps++;
-        if (currentLocation.equals(finalDestination)) {
+        if (isFinalDestination(currentLocation, finalDestination)) {
           break;
         }
       }
     }
 
     return steps;
+  }
+
+  public static boolean isFinalDestination(String currentLocation, String finalDestination) {
+    if (finalDestination != null) {
+      return currentLocation.equals(finalDestination);
+    } else {
+      return currentLocation.charAt(2) == 'Z';
+    }
   }
 
   private static Map<String, List<String>> generateMap(List<String> input) {
@@ -64,5 +90,32 @@ public class Day08 {
       }
     }
     return map;
+  }
+
+  public static long calculateLCM(Long... numbers) {
+    long largestNumber = numbers[0];
+    for (long number : numbers) {
+      if (number > largestNumber) {
+        largestNumber = number;
+      }
+    }
+
+    long temp = largestNumber;
+
+    while (!dividesAllNumbers(largestNumber, numbers)) {
+      largestNumber += temp;
+    }
+    return largestNumber;
+  }
+
+  private static boolean dividesAllNumbers(long largestNumber, Long[] numbers) {
+    boolean result = true;
+    for (long number : numbers) {
+      if (largestNumber % number != 0) {
+        result = false;
+        break;
+      }
+    }
+    return result;
   }
 }
