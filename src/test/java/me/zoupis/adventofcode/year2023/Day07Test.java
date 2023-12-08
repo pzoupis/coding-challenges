@@ -33,4 +33,26 @@ class Day07Test {
       Arguments.of("23456", Type.HIGH_CARD)
     );
   }
+
+  public static Stream<Arguments> identifyTypeWithJokerData() {
+    return Stream.of(
+      Arguments.of("32T3K", Type.ONE_PAIR),
+      Arguments.of("T55J5", Type.FOUR_OF_A_KIND),
+      Arguments.of("KK677", Type.TWO_PAIR),
+      Arguments.of("KTJJT", Type.FOUR_OF_A_KIND),
+      Arguments.of("QQQJA", Type.FOUR_OF_A_KIND),
+      Arguments.of("AAAAA", Type.FIVE_OF_A_KIND),
+      Arguments.of("AAAQQ", Type.FULL_HOUSE),
+      Arguments.of("AAAAQ", Type.FOUR_OF_A_KIND),
+      Arguments.of("23456", Type.HIGH_CARD),
+      Arguments.of("2345J", Type.ONE_PAIR),
+      Arguments.of("AAQKJ", Type.THREE_OF_A_KIND),
+      Arguments.of("AAQJJ", Type.FOUR_OF_A_KIND),
+      Arguments.of("JAAQQ", Type.FULL_HOUSE),
+      Arguments.of("TSSJS", Type.FOUR_OF_A_KIND),
+      Arguments.of("JJJTS", Type.THREE_OF_A_KIND),
+      Arguments.of("JJAAA", Type.FIVE_OF_A_KIND),
+      Arguments.of("AAAAJ", Type.FIVE_OF_A_KIND)
+    );
+  }
 }
