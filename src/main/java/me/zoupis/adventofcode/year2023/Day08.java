@@ -1,6 +1,7 @@
 package me.zoupis.adventofcode.year2023;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,6 +22,15 @@ public class Day08 {
     LOGGER.info(part2());
   }
 
+  private static long part1() {
+    List<String> input = INPUT_HANDLER.readInputFile("adventofcode/year2023/day08.input");
+
+    String instructions = input.get(0);
+    Map<String, List<String>> map = generateMap(input);
+
+    return navigate(map, instructions, "AAA","ZZZ");
+  }
+
   private static long part2() {
     List<String> input = INPUT_HANDLER.readInputFile("adventofcode/year2023/day08.input");
 
@@ -39,17 +49,9 @@ public class Day08 {
     return calculateLCM(steps.toArray(longs));
   }
 
-  private static long part1() {
-    List<String> input = INPUT_HANDLER.readInputFile("adventofcode/year2023/day08.input");
-
-    String instructions = input.get(0);
-    Map<String, List<String>> map = generateMap(input);
-
-    return navigate(map, instructions, "AAA","ZZZ");
-  }
-
   private static long navigate(Map<String, List<String>> map, String instructions, String currentLocation, String finalDestination) {
     int steps = 0;
+
     while (!isFinalDestination(currentLocation, finalDestination)) {
       for (String instruction : instructions.split("")) {
         List<String> options = map.get(currentLocation);
@@ -93,29 +95,27 @@ public class Day08 {
   }
 
   public static long calculateLCM(Long... numbers) {
-    long largestNumber = numbers[0];
-    for (long number : numbers) {
-      if (number > largestNumber) {
-        largestNumber = number;
-      }
+    long temp = Arrays.stream(numbers).sorted().toList().getLast();
+
+    long largestNumber = temp;
+
+    while (!isDivisibleByAllNumbers(temp, numbers)) {
+      temp += largestNumber;
     }
 
-    long temp = largestNumber;
-
-    while (!dividesAllNumbers(largestNumber, numbers)) {
-      largestNumber += temp;
-    }
-    return largestNumber;
+    return temp;
   }
 
-  private static boolean dividesAllNumbers(long largestNumber, Long[] numbers) {
+  private static boolean isDivisibleByAllNumbers(long largestNumber, Long[] numbers) {
     boolean result = true;
+
     for (long number : numbers) {
       if (largestNumber % number != 0) {
         result = false;
         break;
       }
     }
+
     return result;
   }
 }
