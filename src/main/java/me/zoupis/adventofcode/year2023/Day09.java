@@ -18,6 +18,7 @@ public class Day09 {
     List<String> input = INPUT_HANDLER.readInputFile("adventofcode/year2023/day09.input");
 
     LOGGER.info(part1(input));
+    LOGGER.info(part2(input));
   }
 
   public static long part1(List<String> input) {
@@ -30,12 +31,30 @@ public class Day09 {
     return sum;
   }
 
+  public static long part2(List<String> input) {
+    long sum = 0;
+    for (String line : input) {
+      var sequences = getSequences(line);
+      sum += predictPreviousValue(sequences);
+    }
+
+    return sum;
+  }
+
   public static long predictNextValue(List<List<Integer>> sequences) {
     long sum = 0;
     for (List<Integer> sequence : sequences) {
       sum += sequence.getLast();
     }
     return sum;
+  }
+
+  public static long predictPreviousValue(List<List<Integer>> sequences) {
+    long previousValue = 0;
+    for (int i = sequences.size() - 1; i >= 0; i--) {
+      previousValue = sequences.get(i).getFirst() - previousValue;
+    }
+    return previousValue;
   }
 
   public static List<List<Integer>> getSequences(String line) {
