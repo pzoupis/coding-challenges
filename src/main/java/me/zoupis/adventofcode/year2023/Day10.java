@@ -34,7 +34,7 @@ public class Day10 {
       startPoint,
       startPoint
     ));
-    ArrayList<Point> nextPoints = new ArrayList<>();
+    ArrayList<Point> nextPoints;
     List<Point> pointsToBeRemoved = new ArrayList<>();
 
     while (!isFarthestPoint(tempPoints)) {
