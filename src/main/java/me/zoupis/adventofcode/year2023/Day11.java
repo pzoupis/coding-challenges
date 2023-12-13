@@ -2,7 +2,6 @@ package me.zoupis.adventofcode.year2023;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -13,6 +12,8 @@ import me.zoupis.common.Point;
 public class Day11 {
   private static final Logger LOGGER = LogManager.getLogger(Day11.class);
   private static final InputHandler INPUT_HANDLER = InputHandler.getInstance();
+
+  private static final int EXPANSION_RATE = 10;
 
   public static void main(String[] args) {
     var input = INPUT_HANDLER.readInputFile("adventofcode/year2023/day11.input");
@@ -65,30 +66,38 @@ public class Day11 {
   }
 
   public static void expandUniverseVertically(List<String> input) {
+    List<String> expansion = new ArrayList<>();
+    for (int i = 0; i < EXPANSION_RATE; i++) {
+      expansion.add(".".repeat(input.get(0).length()));
+    }
+
     List<Integer> indexes = new ArrayList<>();
     for (int i = 0; i < input.size(); i++) {
       if (input.get(i).chars().allMatch(c -> c == '.')) {
-        indexes.add(i + indexes.size());
+        indexes.add(i + indexes.size() + (EXPANSION_RATE * indexes.size()));
       }
     }
     for (Integer index : indexes) {
-      input.add(index, input.get(index));
+      input.addAll(index, expansion);
     }
   }
 
   public static List<String> expandUniverseHorizontally(List<String> input) {
+    StringBuilder expansion = new StringBuilder();
+    expansion.append(".".repeat(EXPANSION_RATE));
+
     List<Integer> indexes = new ArrayList<>();
     for (int i = 0; i < input.get(0).length(); i++) {
       final int temp = i;
       if (input.stream().allMatch(s -> s.charAt(temp) == '.')) {
-        indexes.add(i + indexes.size());
+        indexes.add(i + indexes.size() + (EXPANSION_RATE * indexes.size()));
       }
     }
     List<String> newInput = new ArrayList<>();
     for (String line : input) {
       StringBuilder stringBuilder = new StringBuilder(line);
       for (int index : indexes) {
-        stringBuilder.insert(index, ".");
+        stringBuilder.insert(index, expansion);
       }
       newInput.add(stringBuilder.toString());
     }
